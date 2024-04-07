@@ -1,5 +1,5 @@
 {% macro product_card(product) %}
-<div class="card shadow h-100 custom-card-hover" style="width: 17rem; height: 12rem;  border-radius: 15px;">
+<div class="card shadow h-100 custom-card-hover" style="width: 17.3rem; height: 12rem;  border-radius: 15px;">
   <img class="card-img-top" src="{{ url_for('static', path=product.image_path) }}" alt="{{ product.image_details.item_title }}" loading="lazy">
   <div class="card-body">
     <h5 class="card-title">{{ product.image_details.item_title }}</h5>
