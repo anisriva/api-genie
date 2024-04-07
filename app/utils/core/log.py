@@ -1,0 +1,54 @@
+import logging
+from logging import Formatter
+from os import path
+
+from app.utils.core import mkdir, read_yaml
+from .singleton import Singleton
+
+class Logger(metaclass=Singleton):
+    '''
+    Initializes the logger according to the 
+    settings.yaml
+    '''
+    
+    def __init__(self):
+        self.logger = self.__configure_logger()
+
+    def __configure_logger(self):
+        config = read_yaml('app/configs/settings.yaml')['logging']
+        logger = logging.getLogger(__name__)
+        log_level = self.__get_level(config['level'])
+        log_format = config['format']
+        if config.get('enable_file_logging', True):
+            file_name = path.join('logs', config.get('filename','api-genie.log'))
+            mkdir(file_name)
+            fh = logging.FileHandler(filename=file_name)
+            sh = logging.StreamHandler()
+            sh.formatter = Formatter(log_format)
+            logging.basicConfig(
+                handlers=[fh, sh],
+                level=log_level,
+                format=log_format,
+                force=True
+                )            
+        else:
+            logging.basicConfig(
+                level=log_level,
+                format=log_format,
+                force=True
+                )
+        return logger
+
+    def __get_level(self, level_name):
+        try:
+            if level_name == 'DEBUG':
+                return logging.DEBUG
+            elif level_name == 'ERROR':
+                return logging.ERROR
+            else:
+                return logging.INFO
+        except KeyError:
+            return logging.INFO
+    
+    def get_logger(self):
+        return self.logger

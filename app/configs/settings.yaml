@@ -1,0 +1,5 @@
+logging:
+  level: INFO
+  format: '%(asctime)s | %(funcName)s | %(levelname)s | %(message)s'
+  enable_file_logging: False
+  filename : api-genie.log
