@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+
+{% block body %}
+<div class="container vh-100 d-flex align-items-center justify-content-center">
+    <div class="text-center">
+        <h1 class="display-4">Welcome to API-Genie</h1>
+        <p class="lead">Simulating real-world web application behaviors for robust, responsive testing.</p>
+        <hr class="my-4">
+        <p>Customize the response time and payload size to emulate different scenarios.</p>
+
+        <!-- Row for Buttons -->
+        <div class="row justify-content-center mb-3">
+            <div class="col-auto">
+                <button type="button" class="btn btn-primary" onclick="simulate(0)">
+                    <i class="fas fa-box-open"></i> Generate Products
+                </button>
+            </div>
+            <div class="col-auto">
+                <button type="button" class="btn btn-primary" onclick="simulate(1)">
+                    <i class="fas fa-align-left"></i> Generate Text
+                </button>
+            </div>
+            <div class="col-auto">
+                <button type="button" class="btn btn-primary" onclick="simulate(2)">
+                    <i class="fas fa-cogs"></i> Simulate Api
+                </button>
+            </div>
+        </div>
+
+        <!-- Row for Inputs -->
+        <div class="row justify-content-center mb-3">
+            <div class="col-sm-6 col-md-4">
+                <input type="number" class="form-control mb-2" id="delay_request" placeholder="Delay in ms" min="0" required>
+            </div>
+            <div class="col-sm-6 col-md-4">
+                <input type="number" class="form-control mb-2" id="payload_request" placeholder="Payload in KB" min="1" required>
+            </div>
+        </div>
+
+        <!-- Row for Docs and Repo Buttons -->
+        <div class="row justify-content-center">
+            <div class="col-auto">
+                <a href="/docs" target="_blank" class="btn btn-info" role="button">
+                    <i class="fas fa-book-open"></i> Docs
+                </a>
+            </div>
+            <div class="col-auto">
+                <a href="#" target="_blank" class="btn btn-dark" role="button"> <!-- TODO: Insert your repo URL -->
+                    <i class="fab fa-github"></i> Repo
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function simulate(placeholder) {
+    const delay = document.getElementById('delay_request').value;
+    const payload = document.getElementById('payload_request').value;
+    const queryString = `?delay_ms=${encodeURIComponent(delay)}&payload_size_kb=${encodeURIComponent(payload)}`;
+    switch(placeholder){
+        case 0:
+        window.location.href = `{{ url_for('product_simulate_view') }}${queryString}`;
+        break;
+        case 1:
+        window.location.href = `{{ url_for('text_simulate_view') }}${queryString}`;
+        break;
+        case 2:
+        window.location.href = `{{ url_for('generate_text_api') }}${queryString}`;
+        break;
+    }
+}
+</script>
+
+{% endblock %}

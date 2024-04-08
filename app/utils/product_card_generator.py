@@ -4,9 +4,9 @@ from random import choice
 from copy import deepcopy
 
 from .core.image_manager import ProductListManager
-from .core.text_generator import generate_lorem_ipsum_payload
+from .core.text_generator import async_generate_lorem_ipsum
 
-def gen_product_card_item_list(
+async def gen_product_card_item_list(
         requested_bytes: int,
         product_desc_text_bytes : int = 75
         ) -> List[Dict]:
@@ -42,7 +42,7 @@ def gen_product_card_item_list(
     total_image_bytes_generated = 0
     total_text_bytes_generated = 0
     
-    product_text = generate_lorem_ipsum_payload(product_desc_text_bytes)
+    product_text = await async_generate_lorem_ipsum(product_desc_text_bytes)
     product_text_bytes = len(product_text.encode('utf-8'))
 
     while image_byte_quota > 0:

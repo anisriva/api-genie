@@ -3,8 +3,13 @@
 
 {% set items_per_page = 12 %}
 {% set total_pages = (products|length / items_per_page) | round(method='ceil') | int%}
+{% if items_per_page < total_pages %}
+    {% set paginations = items_per_page+1 %}
+{% else %}
+    {% set paginations = total_pages+1 %}
+{% endif %}
 
-{% block products_page %}
+{% block body %}
 <!-- Hero Section -->
 {% include 'macros/hero.html' %}
 <main role="main" class="container">
@@ -12,7 +17,7 @@
     <section class="py-5">
         <div class="container">
             <!-- Generate page_num and chunk products within the items_per_page range -->
-            {% for product_page_num in range(1, total_pages+1)%}
+            {% for product_page_num in range(1, items_per_page)%}
             <div id="page-{{product_page_num}}" class="product_page row row-cols-1 row-cols-sm-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 g-5  {% if product_page_num > 1 %}d-none{% endif %}">
                 <!-- Only create page with number of items = items_per_page -->
                 {% for product in products[items_per_page * (product_page_num-1): items_per_page*product_page_num] %}
@@ -32,7 +37,7 @@
                     <li class="page-item last">
                         <a href="javascript:void(0)" class="page-link" onclick="diplayPagePrev()">Prev</a>
                     </li>                      
-                    {% for product_page_num in range(1, items_per_page+1)%}
+                    {% for product_page_num in range(1, paginations)%}
                     <li class="page-item page-item-{{product_page_num}}">
                         <a href="javascript:void(0)" class="page-link" onclick="diplayPage({{product_page_num}})">{{product_page_num}}</a>
                     </li> 

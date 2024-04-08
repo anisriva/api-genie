@@ -1,6 +1,9 @@
+import asyncio
 import logging
 
-def generate_lorem_ipsum_payload(requested_bytes: int) -> str:
+from concurrent.futures import ThreadPoolExecutor
+
+def __generate_lorem_ipsum_payload(requested_bytes: int) -> str:
     """
     Generate a lorem ipsum text payload of approximately the specified byte size.
 
@@ -34,4 +37,10 @@ def generate_lorem_ipsum_payload(requested_bytes: int) -> str:
         result = (lorem_ipsum_bytes * repeated_times + lorem_ipsum_bytes[:remaining_bytes]).decode('utf-8')
         logging.debug(f"Requested bytes greater than base length. Returning {len(result.encode('utf-8'))} bytes.")
 
+    return result
+
+async def async_generate_lorem_ipsum(requested_bytes: int) -> str:
+    loop = asyncio.get_running_loop()
+    with ThreadPoolExecutor() as pool:
+        result = await loop.run_in_executor(pool, __generate_lorem_ipsum_payload, requested_bytes)
     return result
