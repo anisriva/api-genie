@@ -1,6 +1,6 @@
 import logging
 
-from app.utils.core import read_yaml
+from app.configs.config import load_config
 from .singleton import Singleton
 
 class Logger(metaclass=Singleton):
@@ -13,7 +13,7 @@ class Logger(metaclass=Singleton):
         self.logger = self.__configure_logger()
 
     def __configure_logger(self):
-        config = read_yaml('app/configs/settings.yaml')['logging']
+        config = load_config()['logging']
         logger = logging.getLogger(__name__)
         log_level = self.__get_level(config['level'])
         log_format = config['format']

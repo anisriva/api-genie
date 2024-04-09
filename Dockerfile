@@ -1,23 +1,34 @@
-# Use an official Python runtime as a parent image
 FROM python:3.8-slim
 
-# Set the working directory in the container
-WORKDIR /code
+# Args
+ARG APP_MAX_REQUEST_BYTES=50000000
+ARG APP_WORKERS=4
+ARG APP_PORT=8000
+ARG APP_ENV=prod
 
-# Copy the current directory contents into the container at /code
-COPY ./app /code/app
-COPY requirements.txt /code/
+# Set APP envs
+ENV APP_MAX_REQUEST_BYTES=${APP_MAX_REQUEST_BYTES}
+ENV APP_WORKERS=${APP_WORKERS}
+ENV APP_PORT=${APP_PORT}
+ENV APP_ENV=${APP_ENV}
 
-# Install any needed packages specified in requirements.txt
-RUN pip install --no-cache-dir --upgrade -r /code/requirements.txt
+# Set working directory
+WORKDIR /usr/src/app
 
-# Make port 80 available to the world outside this container
-EXPOSE 80
+# Copy your application code
+COPY ./app ./app
+COPY ./static ./static
 
-# Define environment variable
-ENV MODULE_NAME="app.main"
-ENV VARIABLE_NAME="app"
-ENV PORT=80
+# Install dependencies
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
 
-# Run app.py when the container launches
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "80"]
+# Create user
+RUN adduser --disabled-password --gecos '' genie
+USER genie
+
+# Make port 8000 available to outside world
+EXPOSE 8000
+
+# Command to run your application
+CMD ["python","-m","app.main"]

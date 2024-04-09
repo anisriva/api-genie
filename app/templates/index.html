@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block body %}
-<div class="container vh-100 d-flex align-items-center justify-content-center">
+<div class="container d-flex align-items-center justify-content-center" style="min-height: 70vh;">
     <div class="text-center">
         <h1 class="display-4">Welcome to API-Genie</h1>
         <p class="lead">Simulating real-world web application behaviors for robust, responsive testing.</p>
@@ -9,7 +9,7 @@
         <p>Customize the response time and payload size to emulate different scenarios.</p>
 
         <!-- Row for Buttons -->
-        <div class="row justify-content-center mb-3">
+        <div class="row justify-content-center mb-3 gap-2">
             <div class="col-auto">
                 <button type="button" class="btn btn-primary" onclick="simulate(0)">
                     <i class="fas fa-box-open"></i> Generate Products

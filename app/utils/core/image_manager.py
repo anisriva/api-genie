@@ -1,6 +1,6 @@
 import os
 import logging
-from .singleton import Singleton
+from app.utils.core.singleton import Singleton
 
 class ProductListManager(metaclass=Singleton):
     """

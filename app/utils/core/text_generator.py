@@ -3,6 +3,8 @@ import logging
 
 from concurrent.futures import ThreadPoolExecutor
 
+from app.configs.config import load_config
+
 def __generate_lorem_ipsum_payload(requested_bytes: int) -> str:
     """
     Generate a lorem ipsum text payload of approximately the specified byte size.
@@ -15,7 +17,6 @@ def __generate_lorem_ipsum_payload(requested_bytes: int) -> str:
     Returns:
         str: A string of lorem ipsum text approximately equal to the requested byte size. The function ensures the output text size is as close as possible to `requested_bytes`, possibly slightly under or exactly equal.
     """
-    logging.debug(f"Generating lorem ipsum payload for {requested_bytes} bytes.")
     lorem_ipsum_base = (
         "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore "
         "et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut "
@@ -23,7 +24,12 @@ def __generate_lorem_ipsum_payload(requested_bytes: int) -> str:
         "cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in "
         "culpa qui officia deserunt mollit anim id est laborum."
     )
-
+    logging.debug(f"Starting the application with config -> [{load_config()}]")
+    max_supported_bytes = int(load_config()['app']['max_request_bytes'])
+    if requested_bytes > max_supported_bytes:
+        logging.warn(f"Truncating the request [{requested_bytes}] to max_supported_bytes [{max_supported_bytes}]")
+        requested_bytes = max_supported_bytes
+    logging.debug(f"Generating lorem ipsum payload for {requested_bytes} bytes.")
     # Encoded to bytes
     lorem_ipsum_bytes = lorem_ipsum_base.encode('utf-8')
     base_length = len(lorem_ipsum_bytes)

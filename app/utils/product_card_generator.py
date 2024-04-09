@@ -3,8 +3,10 @@ from typing import List, Dict
 from random import choice
 from copy import deepcopy
 
-from .core.image_manager import ProductListManager
-from .core.text_generator import async_generate_lorem_ipsum
+from app.configs.config import load_config
+
+from app.utils.core.image_manager import ProductListManager
+from app.utils.core.text_generator import async_generate_lorem_ipsum
 
 async def gen_product_card_item_list(
         requested_bytes: int,
@@ -34,7 +36,12 @@ async def gen_product_card_item_list(
     Notes:
        - Byte distribution may not perfectly match the requested distribution due to varying image size.
     """
-
+    # Check if the requested bytes is within the support limit
+    max_supported_bytes = int(load_config()['app']['max_request_bytes'])
+    if requested_bytes > max_supported_bytes:
+        logging.warn(f"Truncating the request [{requested_bytes}] to max_supported_bytes [{max_supported_bytes}]")
+        requested_bytes = max_supported_bytes
+    # Invoke variables to capture the memory usage
     image_byte_quota = float(1 if requested_bytes == 0 else requested_bytes)
     product_list = deepcopy(ProductListManager().get_product_detail_list())
     product_card_item_list = []
